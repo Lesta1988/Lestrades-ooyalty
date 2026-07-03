@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>LesTrades Vouchers</title>
+
+<!-- iPhone "Add to Home Screen" support -->
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LT Vouchers">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="theme-color" content="#0EAADD">
+
+<link rel="icon" type="image/png" href="icon.png">
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap');
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0;
+    background: #F4F8FA;
+    font-family: 'Archivo', -apple-system, Arial, sans-serif;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    padding: max(20px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+    min-height: 100vh;
+  }
+
+  h1 { font-size: 19px; font-weight: 700; color: #0B1B22; margin: 0 0 2px; text-align: center; }
+  .sub { font-size: 12.5px; color: #6b7680; margin: 0; text-align: center; max-width: 340px; }
+
+  .formCard {
+    width: 100%; max-width: 420px; background: #fff; border-radius: 14px;
+    padding: 18px; display: flex; flex-direction: column; gap: 13px;
+    box-shadow: 0 1px 3px rgba(14,170,221,0.12); border: 1px solid #E3F4FC;
+  }
+  label { font-size: 12px; font-weight: 600; color: #444; display: block; margin-bottom: 5px; }
+  select, input {
+    width: 100%; padding: 12px; border-radius: 9px; border: 1px solid #CDEFFA;
+    font-size: 15px; background: #fafdff; font-family: inherit; color: #0B1B22;
+  }
+  select:focus, input:focus { outline: 2px solid #0EAADD; outline-offset: -1px; }
+  .row2 { display: flex; gap: 10px; }
+  .row2 > div { flex: 1; }
+
+  .btnRow { display: flex; gap: 9px; }
+  button {
+    padding: 13px 12px; border-radius: 9px; border: none; font-size: 14px;
+    font-weight: 700; font-family: inherit; cursor: pointer;
+  }
+  #newCodeBtn { flex: 1; background: #fafdff; color: #0EAADD; border: 1px solid #CDEFFA; }
+  #saveBtn { flex: 2; background: #0EAADD; color: #fff; }
+  #saveBtn:active, #newCodeBtn:active { opacity: 0.8; }
+
+  .note { font-size: 10.5px; color: #9AA5AB; margin: 0; line-height: 1.4; }
+
+  #card {
+    width: 100%; max-width: 400px; aspect-ratio: 420 / 240;
+    position: relative; background: #fff; border-radius: 16px; overflow: hidden;
+    box-shadow: 0 8px 24px rgba(14,170,221,0.18); border: 1px solid #E3F4FC;
+  }
+  .band { position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #0EAADD, #AFE8FC); }
+  .inner { position: relative; z-index: 2; padding: 5.5% 5.5% 4.5%; display: flex; flex-direction: column; height: 94%; }
+  .rowTop { display: flex; justify-content: space-between; align-items: flex-start; }
+  .brand { color: #0EAADD; font-size: 15px; font-weight: 800; letter-spacing: 0.4px; }
+  .tagline { color: #9AA5AB; font-size: 8.5px; margin-top: 1px; }
+  .pill { color: #0EAADD; font-size: 10px; font-weight: 700; background: #EAF9FE; padding: 5px 10px; border-radius: 20px; border: 1px solid #CDEFFA; white-space: nowrap; }
+  .valueBlock { flex: 1; display: flex; align-items: center; margin-top: 2px; }
+  .value { font-family: 'Archivo Black', sans-serif; color: #0B1B22; font-size: 13vw; max-font-size: 54px; line-height: 1; }
+  .forName { color: #6b7680; font-size: 11px; margin-top: 4px; }
+  .rowBottom { display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px dashed #D8E8EE; padding-top: 10px; }
+  .code { font-family: 'DM Mono', monospace; color: #0EAADD; font-size: 14px; font-weight: 500; letter-spacing: 0.8px; }
+  .terms { color: #9AA5AB; font-size: 8px; margin-top: 3px; }
+  .contact { color: #B7C2C8; font-size: 7.5px; text-align: right; line-height: 1.4; }
+
+  .tip { font-size: 11px; color: #9AA5AB; max-width: 380px; text-align: center; margin: 0; }
+
+  @media (min-width: 460px) {
+    .value { font-size: 54px; }
+  }
+</style>
+
+</head>
+<body>
+
+  <div>
+    <h1>LesTrades Voucher Generator</h1>
+    <p class="sub">Fill in the details, save the image, send it on WhatsApp.</p>
+  </div>
+
+  <div class="formCard">
+    <div>
+      <label for="tier">Reward tier</label>
+      <select id="tier">
+        <option value="FP">First Purchase — GHS 20</option>
+        <option value="D50">Device ≥ GHS 2,000 — GHS 50</option>
+        <option value="D100">Device ≥ GHS 3,000 — GHS 100</option>
+        <option value="D150">Device ≥ GHS 4,000 — GHS 150</option>
+        <option value="R1">1 Referral — GHS 20</option>
+        <option value="R3">3 Referrals — GHS 75</option>
+      </select>
+    </div>
+    <div class="row2">
+      <div>
+        <label for="name">Customer name</label>
+        <input id="name" placeholder="e.g. Ama" autocomplete="off">
+      </div>
+      <div>
+        <label for="phone">Phone number</label>
+        <input id="phone" placeholder="024XXXXXXX" autocomplete="off" inputmode="tel">
+      </div>
+    </div>
+    <div class="btnRow">
+      <button id="newCodeBtn">New code</button>
+      <button id="saveBtn">Save voucher image</button>
+    </div>
+    <p class="note">Log this code in the Sales Log / Referral Tracker before sending — the sheet is the source of truth, this image is just what the customer sees.</p>
+  </div>
+
+  <div id="card">
+    <div class="band"></div>
+    <div class="inner">
+      <div class="rowTop">
+        <div>
+          <div class="brand">LesTrades</div>
+          <div class="tagline">Everything Apple, Anything Gadget</div>
+        </div>
+        <div class="pill" id="pillTier">First Purchase</div>
+      </div>
+      <div class="valueBlock">
+        <div>
+          <div class="value" id="valueText">GHS 20</div>
+          <div class="forName" id="forNameText">Accessories voucher</div>
+        </div>
+      </div>
+      <div class="rowBottom">
+        <div>
+          <div class="code" id="codeText">LST-FP-0000</div>
+          <div class="terms" id="termsText">Valid on accessories only · Expires --</div>
+        </div>
+        <div class="contact">0242826590<br>UCC Taxi Rank</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="tip">Tip: after saving, open Photos, find the voucher, tap Share → WhatsApp → pick the customer.</p>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <script>
+    const TIERS = {
+      FP:   { label: "First Purchase",  value: 20,  prefix: "FP" },
+      D50:  { label: "Device Bonus",    value: 50,  prefix: "D50" },
+      D100: { label: "Device Bonus",    value: 100, prefix: "D100" },
+      D150: { label: "Device Bonus",    value: 150, prefix: "D150" },
+      R1:   { label: "Referral Reward", value: 20,  prefix: "R1" },
+      R3:   { label: "Referral Reward", value: 75,  prefix: "R3" },
+    };
+
+    let currentCode = "";
+    const issueDate = new Date();
+
+    function genCode(tierKey) {
+      const digits = Math.floor(1000 + Math.random() * 9000);
+      return `LST-${TIERS[tierKey].prefix}-${digits}`;
+    }
+
+    function formatDate(d) {
+      return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+    }
+
+    function expiryDate() {
+      const d = new Date(issueDate);
+      d.setDate(d.getDate() + 30);
+      return d;
+    }
+
+    function render() {
+      const tierKey = document.getElementById('tier').value;
+      const tier = TIERS[tierKey];
+      const name = document.getElementById('name').value.trim();
+
+      document.getElementById('pillTier').textContent = tier.label;
+      document.getElementById('valueText').textContent = `GHS ${tier.value}`;
+      document.getElementById('forNameText').textContent = name ? `Voucher for ${name}` : "Accessories voucher";
+      document.getElementById('codeText').textContent = currentCode;
+      document.getElementById('termsText').textContent = `Valid on accessories only · Expires ${formatDate(expiryDate())}`;
+    }
+
+    function newCode() {
+      const tierKey = document.getElementById('tier').value;
+      currentCode = genCode(tierKey);
+      render();
+    }
+
+    document.getElementById('tier').addEventListener('change', newCode);
+    document.getElementById('name').addEventListener('input', render);
+    document.getElementById('newCodeBtn').addEventListener('click', newCode);
+
+    document.getElementById('saveBtn').addEventListener('click', async function() {
+      const btn = this;
+      btn.textContent = "Saving...";
+      const canvas = await html2canvas(document.getElementById('card'), { scale: 3, backgroundColor: null });
+      const link = document.createElement('a');
+      link.download = `${currentCode}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      btn.textContent = "Save voucher image";
+    });
+
+    newCode();
+  </script>
+
+</body>
+</html>
